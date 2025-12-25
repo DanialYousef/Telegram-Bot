@@ -17,7 +17,7 @@ async def go_to_menu(query , text , keyboard):
         pass
 
     await query.message.chat.send_message(
-        text = text
+        text = text,
         reply_markup = keyboard
     )
 def main_menu_keyboard():
