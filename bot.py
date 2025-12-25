@@ -9,6 +9,17 @@ from telegram.ext import (
 
 TOKEN = os.getenv("BOT_TOKEN")
   
+
+async def go_to_menu(query , text , keyboard):
+    try:
+        await query.message.delete()
+    except:
+        pass
+
+    await query.message.chat.send_message(
+        text = text
+        reply_markup = keyboard
+    )
 def main_menu_keyboard():
     return InlineKeyboardMarkup([
         [InlineKeyboardButton("📷 صور", callback_data="images")],
@@ -33,9 +44,10 @@ async def buttons(update : Update , context : ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
     if query.data == "main":
-        await query.edit_message_text(
-            "اختر نوع المحتوى",
-            reply_markup=main_menu_keyboard()
+        await go_to_menu(
+            query,
+            "اختر المحتوى الذي تريديه",
+            main_menu_keyboard
         )
     elif query.data == "images":
         keyboard = InlineKeyboardMarkup([
@@ -43,10 +55,13 @@ async def buttons(update : Update , context : ContextTypes.DEFAULT_TYPE):
             [InlineKeyboardButton("🚗 سيارات", callback_data="img_cars")],
             [InlineKeyboardButton("⬅️ رجوع", callback_data="main")]
         ])
-        await query.edit_message_text(
+     
+        await go_to_menu(
+            query,
             "اختر تصنيف الصور:",
-            reply_markup=keyboard
+            keyboard
         )
+
 
     elif query.data == "videos":
         keyboard = InlineKeyboardMarkup([
@@ -54,9 +69,11 @@ async def buttons(update : Update , context : ContextTypes.DEFAULT_TYPE):
             [InlineKeyboardButton("🎵 موسيقى", callback_data="vid_music")],
             [InlineKeyboardButton("⬅️ رجوع", callback_data="main")]
         ])
-        await query.edit_message_text(
+     
+        await go_to_menu(
+            query,
             "اختر تصنيف الفيديو:",
-            reply_markup=keyboard
+            keyboard
         )
 
     elif query.data == "img_nature":
