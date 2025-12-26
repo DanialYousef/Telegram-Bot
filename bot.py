@@ -77,24 +77,28 @@ async def buttons(update : Update , context : ContextTypes.DEFAULT_TYPE):
         )
 
     elif query.data == "img_nature":
+        await query.message.delete()
         await query.message.reply_photo(
             photo="https://picsum.photos/600/400",
             reply_markup=back_keyboard("images")
         )
 
     elif query.data == "img_cars":
+        await query.message.delete()
         await query.message.reply_photo(
             photo="https://picsum.photos/seed/car/600/400",
             reply_markup=back_keyboard("images")
         )
 
     elif query.data == "vid_short":
+        await query.message.delete()
         await query.message.reply_video(
             video="https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4",
             reply_markup=back_keyboard("videos")
         )
 
     elif query.data == "vid_music":
+        await query.message.delete()
         await query.message.reply_video(
             video="https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4",
             reply_markup=back_keyboard("videos")
