@@ -64,9 +64,8 @@ async def buttons(update : Update , context : ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
     if query.data == "main":
-        await send_or_edit_message(
+        await go_to_menu(
             query,
-            context,
             "اختر المحتوى الذي تريديه",
             main_menu_keyboard
         )
