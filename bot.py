@@ -20,6 +20,25 @@ async def go_to_menu(query , text , keyboard):
         text = text,
         reply_markup = keyboard
     )
+
+async def send_or_edit_message(query , context , text , keybord):
+    menu_id = context.user_data.get("menu_message_id")
+    if menu_id:
+        try:
+            await query.bot.edit_message_text(
+                chat_id = query.message.chat_id,
+                message_id = menu_id,
+                text = text,
+                reply_markup = keybord
+            )
+            return
+        except:
+            pass
+    msg = await query.message.chat.send_message(
+        text=text,
+        reply_markup = keybord
+    )
+    context.user_data["menu_message_id"] = msg.message_id
 def main_menu_keyboard():
     return InlineKeyboardMarkup([
         [InlineKeyboardButton("📷 صور", callback_data="images")],
@@ -35,17 +54,19 @@ def back_keyboard(back_to):
 async def start(update : Update , context : ContextTypes.DEFAULT_TYPE):
     
     # رسالة تعريفية للمستخدم 
-    await update.message.reply_text(
+    msg = await update.message.reply_text(
        "أهلاً بك 👋\nاختر نوع المحتوى:",
         reply_markup=main_menu_keyboard()
     )   
+    context.user_data["menu_message_id"] = msg.message_id
 
 async def buttons(update : Update , context : ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
     if query.data == "main":
-        await go_to_menu(
+        await send_or_edit_message(
             query,
+            context,
             "اختر المحتوى الذي تريديه",
             main_menu_keyboard
         )
@@ -56,8 +77,9 @@ async def buttons(update : Update , context : ContextTypes.DEFAULT_TYPE):
             [InlineKeyboardButton("⬅️ رجوع", callback_data="main")]
         ])
      
-        await go_to_menu(
+        await send_or_edit_message(
             query,
+            context,
             "اختر تصنيف الصور:",
             keyboard
         )
@@ -70,8 +92,9 @@ async def buttons(update : Update , context : ContextTypes.DEFAULT_TYPE):
             [InlineKeyboardButton("⬅️ رجوع", callback_data="main")]
         ])
      
-        await go_to_menu(
+        await send_or_edit_message(
             query,
+            context,
             "اختر تصنيف الفيديو:",
             keyboard
         )
